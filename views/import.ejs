@@ -1,0 +1,61 @@
+<%- include("_header") -%>
+
+<h1>Customer Import</h1> 
+<hr/>
+<p>Total number of records in the database: <%= totalRows %></p>
+
+    <form>
+        <div class="form-group row">
+          <label for="importFile" class="col-sm-2 col-form-label">Upload File:</label>
+          <div class="col-sm-4">
+            <input type="file" class="form-control" id="importFile" name="importFile" required> 
+          </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label"></label>
+              <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary">Import Customers</button>
+              </div>
+            </div>
+      </form>
+      <% if (message !== "") { %>
+          <h6> <%= message %></h6>
+          <% if (errorMessage !== "") { %>
+            <p><%= errorMessage %></p>
+        <% } %>
+      <% } %>
+
+      <p id="result"></p>
+
+      <script>
+          document.querySelector("form").addEventListener("submit", e => {
+            e.preventDefault();
+            document.getElementById("result").innerHTML = "Wait for results ................"
+            const formData = new FormData(e.target);
+            fetch("/import", {
+              method: "POST",
+              body: formData
+            })
+              .then(
+                  response => response.json()
+                )
+              .then(data => {
+                  var html = "<hr/><h3>Import Summary" 
+                            + "<h5>Records Processed: " + data.numberOfRecordsProcessed 
+                            + "<h5>Records Inserted: " + data.numberOfRecordsInserted 
+                            + "<h5>Records Not Inserted: " + data.numberOfRecordsNotInsterted;
+                    if(data.errors.length > 0){
+                        html += "<br/><h5>Errors:</h5><hr/>"
+                        for(var i = 0; i < data.errors.length; i++){
+                            html += data.errors[i] + "<br/>"
+                        }
+                    }
+                  const resultElement = document.getElementById("result");
+                  resultElement.innerHTML = html;
+              })
+              .catch(err => {
+                  document.getElementById("result").textContent = `Error: ${err.message}`;
+              });
+          });
+          </script>
+<%- include("_footer") -%>

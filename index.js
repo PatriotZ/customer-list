@@ -1,6 +1,8 @@
 require('dotenv').config()
 
 // Add required packages
+const multer = require("multer");
+const upload = multer();
 const express = require("express");
 const app = express();
 const { Pool } = require('pg');
@@ -13,6 +15,16 @@ const pool = new Pool({
 
 // Set up EJS
 app.set("view engine", "ejs");
+
+
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept"
+    );
+    next();
+});
 
 
 // Add middleware to parse default urlencoded form
@@ -216,3 +228,80 @@ app.post("/customer/delete/:id", (req,res) => {
         });
     });   
 });
+
+
+app.get("/import", (req, res) => {
+    const sql = "select count(*) numberofcustomers from customer";
+    pool.query(sql, (err, result) => {
+        var message = "";
+        var errorMessage = ""
+        var totalRows = "";
+        if(err) {
+            message = "Error counting the number of customers.";
+            errorMessage = `Error - ${err.message}`;
+        } else {
+            totalRows = result.rows[0].numberofcustomers;
+        };
+        res.render("import", {
+            message: message,
+            errorMessage: errorMessage,
+            totalRows : totalRows
+        });
+    });   
+ });
+
+
+
+ app.post('/import',  upload.single('importFile'), async (req, res) => {
+    if(!req.file || Object.keys(req.file).length === 0) {
+        message = "Error: Import file not uploaded";
+        return res.send(message);
+    };
+    const buffer = req.file.buffer; 
+    const lines = buffer.toString().split(/\r?\n/);
+    console.log(lines);
+    var numberOfRecordsProcessed = 0;
+    var numberOfRecordsInserted = 0;
+    var numberOfRecordsNotInsterted = 0;
+    var errors = [];
+
+   
+    for(line of lines){
+        console.log(line);
+        customer = line.split(",");
+        console.log(customer);           
+        const result = await insertCustomer(customer);        
+        console.log(result);
+        numberOfRecordsProcessed++;
+        if(result.trans == "success"){
+            numberOfRecordsInserted++;
+        }else{
+            numberOfRecordsNotInsterted++;
+            errors.push(result.msg);
+        }
+    }
+
+    res.send({
+        numberOfRecordsProcessed : numberOfRecordsProcessed , 
+        numberOfRecordsInserted : numberOfRecordsInserted,
+        numberOfRecordsNotInsterted : numberOfRecordsInserted, errors:errors
+    });
+    
+});
+
+
+const insertCustomer = (customer) => {
+    const sql = "INSERT INTO customer (cusId, cusFname, cusLname, cusState, cusSalesYTD, cusSalesPrev) VALUES ($1, $2, $3, $4, $5, $6)";
+    return pool.query(sql, customer)
+        .then(res => {
+            return {
+                trans: "success"
+            };
+        })
+        .catch(err => {
+            return {
+                trans: "fail", 
+                msg: `Customer ID: ${customer[0]} - Error:  ${err.message}`
+            };
+        });
+}
