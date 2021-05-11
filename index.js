@@ -305,3 +305,46 @@ const insertCustomer = (customer) => {
             };
         });
 }
+
+
+
+app.get("/export", (req, res) => {
+    const sql = "select count(*) numberofcustomers from customer";
+    pool.query(sql, (err, result) => {
+        var message = "";
+        var errorMessage = ""
+        var totalRows = "";
+        if(err) {
+            message = "Error counting the number of customers.";
+            errorMessage = `Error - ${err.message}`;
+        } else {
+            totalRows = result.rows[0].numberofcustomers;
+        };
+        res.render("export", {
+            message: message,
+            errorMessage: errorMessage,
+            totalRows : totalRows
+        });
+    }); 
+});
+   
+   
+   app.post("/export", (req, res) => {
+       const fileName = req.body.fileName;
+       const sql = "select * from customer order by cusId";
+       pool.query(sql, [], (err, result) => {
+           var message = "";
+           if(err) {
+               message = `Error - ${err.message}`;
+               res.render("output", { message: message })
+           } else {
+               var output = "";
+               result.rows.forEach(customer => {
+                   output += `${customer.cusid},${customer.cusfname},${customer.cuslname},${customer.cusstate},${Number(customer.cussalesytd.replace(/[^0-9.-]+/g,""))},${Number(customer.cussalesprev.replace(/[^0-9.-]+/g,""))}\r\n`;
+               });
+               res.header("Content-Type", "application/octet-stream");
+               res.attachment(fileName);
+               return res.send(output);
+           };
+       });
+   });
