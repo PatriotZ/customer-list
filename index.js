@@ -137,7 +137,6 @@ app.post("/customer/create", (req,res) => {
 
 app.get("/customer/edit/:id", (req, res) => {
     const id = [req.params.id];
-    console.log(id);
     const sql = "SELECT * FROM CUSTOMER where cusId  = $1";
     pool.query(sql, id, (err, result) => {
         var message = "";
@@ -147,7 +146,6 @@ app.get("/customer/edit/:id", (req, res) => {
             message = "error";
             errorMessage = `Error - ${err.message}`;
         } else {
-            message = "success";
             customer = result.rows;
         };
         res.render("customer/edit", {
@@ -161,16 +159,16 @@ app.get("/customer/edit/:id", (req, res) => {
 app.post("/customer/edit/:id", (req,res) => {   
     const customer = req.body;
     const customerArray = Object.values(customer);
-    const sql = "INSERT INTO customer (cusId, cusFname, cusLname, cusState, cusSalesYTD, cusSalesPrev) VALUES ($1, $2, $3, $4, $5, $6)";
+    const sql = "update customer set cusId = $1, cusFname = $2, cusLname = $3, cusState = $4, cusSalesYTD = $5, cusSalesPrev = $6 where cusid = $1";
     pool.query(sql, customerArray, (err, result) => {
-        var message = "New Customer Created!";
+        var message = "Customer Updated Successfully!";
         var errorMessage = "";
         if (err) {
-            message = "Error creating new customer.";
+            message = "Error updating customer.";
             errorMessage = `Error - ${err.message}`;
         } 
-        res.render("customer/create", {
-            model : customer,
+        res.render("customer/edit", {
+            model : [customer],
             message:message,
             errorMessage:errorMessage
         });
@@ -178,17 +176,7 @@ app.post("/customer/edit/:id", (req,res) => {
 });
 
 app.get("/customer/delete/:id", (req, res) => {
-    const message = "";
-    const customer = {}
-    res.render("customer/create", {
-        model : customer,
-        message : message
-    });
-});
-
-app.post("/customer/delete/:id", (req,res) => {   
     const id = [req.params.id];
-    console.log(id);
     const sql = "SELECT * FROM CUSTOMER where cusId  = $1";
     pool.query(sql, id, (err, result) => {
         var message = "";
@@ -198,13 +186,33 @@ app.post("/customer/delete/:id", (req,res) => {
             message = "error";
             errorMessage = `Error - ${err.message}`;
         } else {
-            message = "success";
             customer = result.rows;
         };
-        res.render("customer/edit", {
+        res.render("customer/delete", {
             message: message,
             errorMessage: errorMessage,
             model : customer
+        });
+    });
+});
+
+app.post("/customer/delete/:id", (req,res) => {   
+    const id = [req.params.id];
+    const customer = req.body;
+    const sql = "delete from  customer where cusId  = $1";
+    pool.query(sql, id, (err, result) => {
+        var message = "";
+        var errorMessage = ""
+        if(err) {
+            message = "Error deleting customer.";
+            errorMessage = `Error - ${err.message}`;
+        } else {
+            message = "Customer deleted successfully.";
+        };
+        res.render("customer/delete", {
+            message: message,
+            errorMessage: errorMessage,
+            model : [customer]
         });
     });   
 });

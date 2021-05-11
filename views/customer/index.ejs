@@ -86,10 +86,7 @@
                         <td><%= customer.cussalesprev %></td>
                         <td>
                             <a href="/customer/edit/<%= customer.cusid %>" class="btn btn-warning">Edit</a>
-                            <g:form method="post" action="/customer/delete">
-                                <input type="hidden" name="cusId" value="<% customer.cusid %>"/>
-                                <input type="submit" name="delete" value="Delete" class="btn btn-danger">
-                            </g:form>
+                            <a href="/customer/delete/<%= customer.cusid %>" class="btn btn-danger">Delete</a>
                         </td>
                     </tr>
                 <% }) %>
