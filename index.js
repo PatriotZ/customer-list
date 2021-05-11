@@ -21,6 +21,21 @@ app.listen(process.env.PORT || 3000, () => {
 });
 
 // Setup routes
-app.get("/", (req, res) => {    
-   res.render("index");
+
+app.get("/", (req, res) => {
+    const sql = "SELECT * FROM CUSTOMER ORDER BY cusId";
+    pool.query(sql, [], (err, result) => {
+        var message = "";
+        var model = {};
+        if(err) {
+            message = `Error - ${err.message}`;
+        } else {
+            message = "success";
+            model = result.rows;
+        };
+        res.render("index", {
+            message: message,
+            model : model
+        });
+    });
 });
