@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
     res.render("index");
 });
 
-app.get("/customer/manage", (req, res) => {
+app.get("/customers", (req, res) => {
     const sql = "SELECT * FROM CUSTOMER ORDER BY cusId";
     pool.query(sql, [], (err, result) => {
         var message = "";
@@ -42,4 +42,9 @@ app.get("/customer/manage", (req, res) => {
             model : model
         });
     });
+});
+
+
+app.get("/customer/create", (req, res) => {
+    res.render("customer/create")
 });

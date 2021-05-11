@@ -6,30 +6,98 @@
     <p><%= message %></p>
 <% } else { %>
     <h2>Total number of records in the database: <%= model.length %></h2>
-    <table class="table">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">Customer ID</th>
-                <th scope="col">Fist Name</th>
-                <th scope="col">Last Name</th>
-                <th scope="col">Customers State</th>
-                <th scope="col">Current Sales</th>
-                <th scope="col">Previous Sales</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% model.forEach(customer => { %>             
+    <hr/>
+    <form method="post" action="/customers">
+        <div class="form-group row">
+          <label for="ID" class="col-sm-2 col-form-label">ID:</label>
+          <div class="col-sm-4">
+            <input type="number" class="form-control" id="ID" placeholder="Email"> 
+          </div>
+          <label class="col-sm-3 col-form-label">(equals)</label>
+        </div>
+        <div class="form-group row">
+          <label for="firstName" class="col-sm-2 col-form-label">First Name</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name"> 
+          </div>
+          <label class="col-sm-3 col-form-label">(Begins with)</label>
+        </div>
+        <div class="form-group row">
+            <label for="lastName" class="col-sm-2 col-form-label">Last Name</label>
+            <div class="col-sm-4">
+              <input type="text" class="form-control" id="lastName" name="lastName"  placeholder="Last Name"> 
+            </div>
+            <label class="col-sm-3 col-form-label">(Begins with)</label>
+        </div>
+        <div class="form-group row">
+            <label for="state" class="col-sm-2 col-form-label">State</label>
+            <div class="col-sm-4">
+              <input type="text" class="form-control" id="state" name="state" maxlength="2" placeholder="State">               
+            </div>
+            <label class="col-sm-3 col-form-label">(Equals)</label>
+        </div>
+        <div class="form-group row">
+            <label for="salesYTD" class="col-sm-2 col-form-label">Sales YTD</label>
+            <div class="col-sm-4">
+              <input type="number" step="any" class="form-control" id="salesYTD" name="salesYTD" placeholder="Sales YTD"> 
+            </div>
+            <label class="col-sm-3 col-form-label">(Greather than or equal to)</label>
+        </div>
+        <div class="form-group row">
+            <label for="salesPrev" class="col-sm-2 col-form-label">Previous Years Sales</label>
+            <div class="col-sm-4">
+              <input type="number" step="any" class="form-control" id="salesPrev" name="salesPrev" placeholder="Previous Years Sales">               
+            </div>
+            <label class="col-sm-3 col-form-label">(Greather than or equal to)</label>
+        </div>        
+        <div class="form-group row">
+        <label class="col-sm-2 col-form-label"></label>
+          <div class="col-sm-4">
+            <button type="submit" class="btn btn-primary">Find</button>
+            <button type="reset" class="btn btn-primary">Reset</button>
+          </div>
+        </div>
+      </form>
+
+
+    <br/>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
                 <tr>
-                    <td><%= customer.cusid %></td>
-                    <td><%= customer.cusfname %></td>
-                    <td><%= customer.cuslname %></td>
-                    <td><%= customer.cusstate %></td>
-                    <td><%= customer.cussalesytd %></td>
-                    <td><%= customer.cussalesprev %></td>
+                    <th scope="col">Customer ID</th>
+                    <th scope="col">Fist Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Customers State</th>
+                    <th scope="col">Current Sales</th>
+                    <th scope="col">Previous Sales</th>
+                    <th scope="col">
+                        <a href="/customer/create" class="btn btn-danger">Create Customer</a>
+                    </th>
                 </tr>
-            <% }) %>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <% model.forEach(customer => { %>             
+                    <tr>
+                        <td><%= customer.cusid %></td>
+                        <td><%= customer.cusfname %></td>
+                        <td><%= customer.cuslname %></td>
+                        <td><%= customer.cusstate %></td>
+                        <td><%= customer.cussalesytd %></td>
+                        <td><%= customer.cussalesprev %></td>
+                        <td>
+                            <a href="/customer/edit/<%= customer.cusid %>" class="btn btn-warning">Edit</a>
+                            <g:form method="post" action="/customer/delete">
+                                <input type="hidden" name="cusId" value="<% customer.cusid %>"/>
+                                <input type="submit" name="delete" value="Delete" class="btn btn-danger">
+                            </g:form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
 <% } %>
 
 <%- include("../_footer") -%>
