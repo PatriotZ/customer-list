@@ -1,0 +1,24 @@
+{
+  "name": "customer-list",
+  "version": "1.0.0",
+  "description": "Akhtari's Customer List Application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PatriotZ/customer-list.git"
+  },
+  "author": "Zafar Akhtari",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PatriotZ/customer-list/issues"
+  },
+  "homepage": "https://github.com/PatriotZ/customer-list#readme",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "pg": "^8.6.0"
+  }
+}
