@@ -1,0 +1,35 @@
+<%- include("../_header") -%>
+
+<h1>Find Customers</h1>
+<% if(message !== "success") { %>
+    <h1>We Encountered an Error</h1>
+    <p><%= message %></p>
+<% } else { %>
+    <h2>Total number of records in the database: <%= model.length %></h2>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Customer ID</th>
+                <th scope="col">Fist Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Customers State</th>
+                <th scope="col">Current Sales</th>
+                <th scope="col">Previous Sales</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% model.forEach(customer => { %>             
+                <tr>
+                    <td><%= customer.cusid %></td>
+                    <td><%= customer.cusfname %></td>
+                    <td><%= customer.cuslname %></td>
+                    <td><%= customer.cusstate %></td>
+                    <td><%= customer.cussalesytd %></td>
+                    <td><%= customer.cussalesprev %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+<% } %>
+
+<%- include("../_footer") -%>

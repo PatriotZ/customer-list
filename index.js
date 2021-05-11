@@ -22,7 +22,11 @@ app.listen(process.env.PORT || 3000, () => {
 
 // Setup routes
 
-app.get("/", (req, res) => {
+app.get("/", (req, res) => {    
+    res.render("index");
+});
+
+app.get("/customer/manage", (req, res) => {
     const sql = "SELECT * FROM CUSTOMER ORDER BY cusId";
     pool.query(sql, [], (err, result) => {
         var message = "";
@@ -33,7 +37,7 @@ app.get("/", (req, res) => {
             message = "success";
             model = result.rows;
         };
-        res.render("index", {
+        res.render("customer/index", {
             message: message,
             model : model
         });
