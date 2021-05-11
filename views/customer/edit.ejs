@@ -1,46 +1,49 @@
 <%- include("../_header") -%>
 
-<h1>Create Customer</h1> 
+<%=  model %>
+
+<h1>Edit Customer</h1> 
     <hr/>
     <form method="post" action="/customer/create">
         <div class="form-group row">
           <label for="ID" class="col-sm-2 col-form-label">ID:</label>
           <div class="col-sm-4">
-            <input type="number" class="form-control" id="ID" name="ID" placeholder="Customer ID"  value="<%= model.ID %>" required> 
+            <input type="number" class="form-control" id="ID" name="ID" placeholder="Customer ID"  value="<%= model[0].cusid %>" required> 
           </div>
           <label class="col-sm-3 col-form-label">(Required)</label>
         </div>
         <div class="form-group row">
           <label for="firstName" class="col-sm-2 col-form-label">First Name</label>
           <div class="col-sm-4">
-            <input type="text" class="form-control" id="firstName" name="firstName"  pattern="[A-Za-z]{0,}" placeholder="First Name"  value="<%= model.firstName %>" required> 
+            <input type="text" class="form-control" id="firstName" name="firstName"  pattern="[A-Za-z]{0,}" placeholder="First Name"  value="<%= model[0].cusfname %>" required> 
           </div>
           <label class="col-sm-3 col-form-label">(Required)</label>
         </div>
         <div class="form-group row">
             <label for="lastName" class="col-sm-2 col-form-label">Last Name</label>
             <div class="col-sm-4">
-              <input type="text" class="form-control" id="lastName" name="lastName"  pattern="[A-Za-z]{0,}" placeholder="Last Name"  value="<%= model.lastName %>" required> 
+              <input type="text" class="form-control" id="lastName" name="lastName"  pattern="[A-Za-z]{0,}" placeholder="Last Name"  value="<%= model[0].cuslname %>" required> 
             </div>
             <label class="col-sm-3 col-form-label">(Required)</label>
         </div>
         <div class="form-group row">
             <label for="state" class="col-sm-2 col-form-label">State</label>
             <div class="col-sm-4">
-              <input type="text" class="form-control" id="state" name="state" maxlength="2" pattern="[A-Za-z]{0,2}" placeholder="State"  value="<%= model.State %>">               
+              <input type="text" class="form-control" id="state" name="state" maxlength="2" pattern="[A-Za-z]{0,2}" placeholder="State"  value="<%= model[0].cusstate %>">               
             </div>
             <label class="col-sm-3 col-form-label">
         </div>
         <div class="form-group row">
             <label for="salesYTD" class="col-sm-2 col-form-label">Sales YTD</label>
             <div class="col-sm-4">
-              <input type="number" step="any" class="form-control" id="salesYTD" name="salesYTD" placeholder="Sales YTD"  value="<%= model.salesYTD %>"> 
+                <%= model[0].cussalesytd %>
+              <input type="number" step="any" class="form-control" id="salesYTD" name="salesYTD" placeholder="Sales YTD"  value="<%= model[0].cussalesytd %>"> 
             </div>
         </div>
         <div class="form-group row">
             <label for="salesPrev" class="col-sm-2 col-form-label">Previous Years Sales</label>
             <div class="col-sm-4">
-              <input type="number" step="any" class="form-control" id="salesPrev" name="salesPrev" placeholder="Previous Years Sales"  value="<%= model.salesPrev %>">               
+              <input type="number" step="any" class="form-control" id="salesPrev" name="salesPrev" placeholder="Previous Years Sales"  value="<%= model[0].cussalesprev %>">               
             </div>
         </div>        
         <div class="form-group row">
